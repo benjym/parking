@@ -12,3 +12,7 @@ python summarise_blockface_lengths.py
 # SUVs figure
 python parking.py json/SUVs.json
 python summarise_SUVs.py
+
+# motorcycles figure
+python parking.py json/motorcycles.json
+python summarise_motorcycles.py

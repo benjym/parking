@@ -304,9 +304,6 @@ if __name__ == "__main__":
     # strategy = sys.argv[1]
     # outfolder = sys.argv[2]
 
-    if not "ergodic" in params:
-        params["ergodic"] = [1]
-
     for i, p in enumerate(
         tqdm(params["strategy"], desc="strategy", disable=(len(params["strategy"]) == 1))
     ):
@@ -329,6 +326,8 @@ if __name__ == "__main__":
                         disable=(len(params["sigma_car_length"]) == 1),
                     )
                 ):
+                    if not "ergodic" in params:
+                        params["ergodic"] = L
                     for t in tqdm(
                         range(int(params["ergodic"] / L)),
                         desc="ergodic",
@@ -341,23 +340,26 @@ if __name__ == "__main__":
                         temp_params["mean_car_length"] = mean_car_length
                         temp_params["sigma_car_length"] = sigma_car_length
                         temp_params["ergodic"] = t
-                        temp_params["outfolder"] = (
-                            "output/strategy_"
-                            + p
-                            + "/L_"
-                            + str(L)
-                            + "/mean_car_length_"
-                            + str(mean_car_length)
-                            + "/sigma_car_length_"
-                            + str(sigma_car_length)
-                        )
+                        temp_params[
+                            "outfolder"
+                        ] = f"output/strategy_{p}/L_{L}/mean_car_length_{mean_car_length}/sigma_car_length_{sigma_car_length}"
                         if "motorcycles" in params:
-                            temp_params["outfolder"] = (
-                                "output/motorcycles/" + temp_params["outfolder"][6:]
-                            )
-                        (
-                            parked_car_locs,
-                            parked_car_lengths,
-                            spot_lengths,
-                            linear_densities,
-                        ) = time_march(temp_params)
+                            base_folder = temp_params['outfolder'][6:]
+                            for m in tqdm(params['motorcycle_ratio'], desc="motorcycle_ratio", leave=False):
+                                temp_params['motorcycle_ratio'] = m
+                                temp_params[
+                                    "outfolder"
+                                ] = f"output/motorcycles/motorcycle_ratio_{m}/{base_folder}"
+                                (
+                                    parked_car_locs,
+                                    parked_car_lengths,
+                                    spot_lengths,
+                                    linear_densities,
+                                ) = time_march(temp_params)
+                        else:
+                            (
+                                parked_car_locs,
+                                parked_car_lengths,
+                                spot_lengths,
+                                linear_densities,
+                            ) = time_march(temp_params)

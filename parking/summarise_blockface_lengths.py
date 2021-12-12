@@ -18,7 +18,7 @@ ax = ax.flatten()
 
 linestyles = ["-", "--", "-.", ":"]
 # for i,parking_mode in enumerate(params['parking_mode']):
-for i, strategy in enumerate(["one_side","random"]):
+for i, strategy in enumerate(["one_side", "random"]):
     for j, l in enumerate(params["L"]):
         d = []
         for t in range(int(params["ergodic"] / l)):
@@ -36,12 +36,13 @@ for i, strategy in enumerate(["one_side","random"]):
             alpha=0.7,
         )
     ax[i].set_xscale("log")
-    ax[i].set_xticks([1e-3,1e-2,1e-1,1e0,1e1])
+    ax[i].set_xticks([1e-3, 1e-2, 1e-1, 1e0, 1e1])
     ax[i].set_xlabel("Vehicles departed per metre (veh/m)")
     ax[i].set_ylabel("Linear density (-)")
-    ax[i].set_xlim(xmax=params['departures_per_metre'])
-    ax[i].set_ylim([0.4,1])
-    if i == 1: ax[i].legend(loc='lower left',framealpha=1)
+    ax[i].set_xlim(xmax=params["departures_per_metre"])
+    ax[i].set_ylim([0.4, 1])
+    if i == 1:
+        ax[i].legend(loc="lower left", framealpha=1)
 
 # for i, parking_mode in enumerate(["one_side"]):
 #     for j, l in enumerate(params["L"]):
