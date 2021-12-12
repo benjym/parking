@@ -1,7 +1,7 @@
 {
     "verbose": false,
     "spatiotemporal": true,
-    "parking_mode": ["one_side","middle","random"],
+    "strategy": ["one_side","middle","random"],
     "L" : [1e2],
     "departures_per_metre" : 10,
     "mean_car_length" : [2.5],

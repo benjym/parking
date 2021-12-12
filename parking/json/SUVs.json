@@ -1,6 +1,6 @@
 {
     "verbose": false,
-    "parking_mode": ["one_side","half_half","middle","random"],
+    "strategy": ["one_side","half_half","middle","random"],
     "L" : [1e4],
     "departures_per_metre" : 10,
     "mean_car_length" : [2.5],
