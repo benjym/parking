@@ -4,6 +4,6 @@
     "L" : [1e4],
     "departures_per_metre" : 10,
     "mean_car_length" : [2.5],
-    "sigma_car_length" : [0.4,0.3,0.2],
+    "sigma_car_length" : [0.33333333333,0.666666667,1.0],
     "min_clearance" : 0.0
 }

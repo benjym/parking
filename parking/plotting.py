@@ -55,6 +55,8 @@ def make_graph(t, nt, parked_car_locs, parked_car_lengths, spot_lengths, linear_
 
     plt.subplots_adjust(wspace=0.3, hspace=0.3, left=0.07, bottom=0.09, top=0.98, right=0.98)
 
+    return fig
+
 
 def get_random_color(id):
     rng = np.random.default_rng(seed=id)

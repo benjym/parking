@@ -255,7 +255,7 @@ def time_march(
 
         if params["verbose"]:
             plt.ion()
-            make_graph(
+            fig = make_graph(
                 t,
                 nt,
                 parked_car_locs,
@@ -266,10 +266,10 @@ def time_march(
             )
             plt.pause(1e-3)
 
-    make_graph(
+    fig = make_graph(
         t, nt, parked_car_locs, parked_car_lengths, spot_lengths, linear_densities, params["L"]
     )
-    plt.savefig(f'{params["outfolder"]}/summary.png')
+    fig.savefig(f'{params["outfolder"]}/summary.png')
 
     if "spatiotemporal" in params:
         spatiotemporal(nt, car_ids, L)

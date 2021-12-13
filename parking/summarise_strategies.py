@@ -11,7 +11,7 @@ with open("json/strategies.json") as f:
 if not os.path.exists('plots/'): os.makedirs('plots/')
 
 labels = ["One end", "Either end", "Middle", "Random"]
-fig, ax = plt.subplots(1, 2, figsize=[6, 2.5])
+fig, ax = plt.subplots(1, 2, figsize=[6, 1.75])
 ax = ax.flatten()
 
 for i, strategy in enumerate(params["strategy"]):
@@ -50,5 +50,5 @@ ax[1].set_xlabel("Gap size (m)")
 ax[1].set_ylabel("Number")
 ax[1].legend(loc=0)
 
-plt.subplots_adjust(left=0.09, right=0.98, bottom=0.17, top=0.99, wspace=0.25, hspace=0.3)
+plt.subplots_adjust(left=0.08, right=0.99, bottom=0.24, top=0.99, wspace=0.25, hspace=0.3)
 plt.savefig("plots/strategies.pdf")
