@@ -3,6 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+def marked_spaces(L,space_length,params,ergodic): # UNTESTED!!!
+    n_spaces = np.floor(L/space_length)
+    spots = np.zeros(n_spaces,ergodic)
+    for e in ergodic:
+        for i in range(n_spaces):
+            valid = False
+            while not valid:
+                l = np.random.normal(loc=params["mean_car_length"], scale=params["sigma_car_length"])
+                if l <= space_length:
+                    spots[i,e] = l
+                    valid = True
+    return spots
+
+
 plt.style.use("transport-findings.mplstyle")
 
 with open("json/strategies.json") as f:
@@ -24,6 +38,43 @@ for i, strategy in enumerate(params["strategy"]):
         label=labels[i],
         c=cm.plasma(i / len(params["strategy"])),
     )
+
+ls = ['dashed','dotted']
+for i,N in enumerate([2,3]):
+    # analytic solution for large L
+    ax[0].semilogx(
+        np.arange(len(d)) / params["L"],
+        np.ones(len(d))*params['mean_car_length'][0]/(params['mean_car_length'][0] + N*params['sigma_car_length'][0]),
+        ls=ls[i],
+        c='k',
+        # label=r'$l=\mu+'+str(N)+r'\sigma$'
+    )
+    # brute force method
+    # space_length = params['mean_car_length'][0] + N*params['sigma_car_length'][0]
+    # marked_spots = marked_spaces(L,space_length,params,ergodic)
+    # ax[0].semilogx(
+    # )
+
+    ax[0].text(
+        3e-1,
+        0.01 + params['mean_car_length'][0]/(params['mean_car_length'][0] + N*params['sigma_car_length'][0]),
+        '$l=\mu+' + str(N) + r'\sigma$'
+    )
+
+
+# ax[0].semilogx(
+#     np.arange(len(d)) / params["L"],
+#     np.ones(len(d))*params['mean_car_length'][0]/(params['mean_car_length'][0] + 3*params['sigma_car_length'][0]),
+#     ls='dotted',
+#     c='k',
+#     label=r'$\mu+3\sigma$'
+# )
+#
+# ax[0].text(
+#     1e0,
+#     0.01 + params['mean_car_length'][0]/(params['mean_car_length'][0] + 3*params['sigma_car_length'][0]),
+#     '$\mu+3\sigma$'
+# )
 
 ax[0].set_xlabel("Vehicles departed per metre (veh/m)")
 ax[0].set_ylabel("Linear density (-)")

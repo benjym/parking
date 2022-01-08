@@ -2,6 +2,7 @@
 figure.figsize : 6, 4 # in inches
 lines.linewidth : 1
 font.family : serif
+axes.titlesize : 10
 text.usetex : True
 mathtext.fontset : custom
 mathtext.rm : Bitstream Vera Sans
