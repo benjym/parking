@@ -87,9 +87,16 @@ def spatiotemporal(nt, car_ids, L):
         patches.append(rect)
 
     colors = np.random.rand(len(patches))
-    collection = PatchCollection(patches, cmap=plt.cm.plasma)  # , alpha=0.3)
+    collection = PatchCollection(patches,
+                                 # cmap = plt.cm.plasma,
+                                 cmap = plt.cm.rainbow,
+                                 # cmap = plt.cm.hsv,
+                                 # alpha=0.3,
+                                 )
     collection.set_array(colors)
     spt_ax.add_collection(collection)
+
+    # spt_ax.set_facecolor('black') # make the axis background black
 
     # spt_ax.plot([parked_car_locs[i]-parked_car_lengths[i],
     #              parked_car_locs[i]+parked_car_lengths[i]],

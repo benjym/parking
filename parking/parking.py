@@ -5,60 +5,77 @@ import matplotlib.pyplot as plt
 from plotting import *
 from tqdm import tqdm
 
+"""
+"**Parking**" is a Python library for simulating the parking of vehicles along a single block face. After checking out the repository you can run this code as
+    python parking.py <path_to_json_file>
+
+Simulation parameters are stored in json files. There are some samples in the `json/` folder.
+"""
 
 def park_the_car(strategy, parked_car_locs, test_loc, index, min_loc, max_loc):
+    """
+    Park a single car following a given `strategy`, an existing set of `parked_car_locs`, an `index` which represents between which cars we should park, and the bounds of the parking space `min_loc` and `max_loc`. Returns the updated `parked_car_locs`.
+    """
     if strategy == "test_loc":
-        parked_car_locs.insert(index, test_loc)
+        parked_car_locs.insert(index, test_loc) # just for testing, we are going to put a car right at `test_loc`.
     elif strategy == "random":
-        parked_car_locs.insert(index, np.random.rand() * (max_loc - min_loc) + min_loc)
+        parked_car_locs.insert(index, np.random.rand() * (max_loc - min_loc) + min_loc) # put it somewhere random between `min_loc` and `max_loc`
     elif strategy == "middle":
-        parked_car_locs.insert(index, (max_loc + min_loc) / 2.0)
+        parked_car_locs.insert(index, (max_loc + min_loc) / 2.0) # put it right in the middle
     elif strategy == "one_side":
-        parked_car_locs.insert(index, min_loc)
+        parked_car_locs.insert(index, min_loc) # put it at `min_loc` always
     elif strategy == "half_half":
-        if np.random.rand() < 0.5:
-            parked_car_locs.insert(index, min_loc)
+        if np.random.rand() < 0.5: # half of the time
+            parked_car_locs.insert(index, min_loc) # put it at `min_loc`
         else:
-            parked_car_locs.insert(index, max_loc)
+            parked_car_locs.insert(index, max_loc) # put it at `max_loc`
     else:
-        sys.exit(f'Strategy "{strategy}" is undefined')
+        sys.exit(f'Strategy "{strategy}" is undefined') # you made a typo
     return parked_car_locs
 
 
 def generate_new_car_length(params):
+    """
+    Pull another random vehicle length out of the vehicle length distribution defined by `mean_car_length`, `sigma_car_length` and optionally if there are motorcycles, `motorcycle_ratio` and `motorcycle_length`
+    """
     # return np.random.rand()*(max_car_length - min_car_length) + min_car_length # HALF CAR LENGTH
-    if "motorcycles" in params:
-        if np.random.rand() < params["motorcycle_ratio"]:
-            return params["motorcycle_length"]
+    if "motorcycles" in params: # if we are simulating motorcycles
+        if np.random.rand() < params["motorcycle_ratio"]: # if this vehicle is going to be a motorcycle (stochastic)
+            return params["motorcycle_length"] # this is a motorcycle
         else:
-            return np.random.normal(loc=params["mean_car_length"], scale=params["sigma_car_length"])
+            return np.random.normal(loc=params["mean_car_length"], scale=params["sigma_car_length"]) # this is a car
     else:
-        return np.random.normal(loc=params["mean_car_length"], scale=params["sigma_car_length"])
+        return np.random.normal(loc=params["mean_car_length"], scale=params["sigma_car_length"]) # this is a car
 
 
 def get_spot_lengths(parked_car_locs, parked_car_lengths, L, min_clearance):
-    if len(parked_car_locs) == 0:
-        spots = [L - 2 * min_clearance]
-    elif len(parked_car_locs) == 1:
+    """
+    For a given set of vehicle centres `parked_car_locs`, and their respective `parked_car_lengths`, block face length `L` and some `min_clearance` between the vehicles, return a list of all of the spaces between the vehicles.
+    """
+    if len(parked_car_locs) == 0: # if no cars are parked yet
+        spots = [L - 2 * min_clearance] # return the full block face less the clearances at the ends
+    elif len(parked_car_locs) == 1: # if there is just one car
         spots = [
             parked_car_locs[0] - parked_car_lengths[0] - min_clearance,
             L - parked_car_locs[0] - parked_car_lengths[0] - min_clearance,
         ]
     else:
-        x = np.array(parked_car_locs)
-        l = np.array(parked_car_lengths)
+        x = np.array(parked_car_locs) # convert to a numpy array
+        l = np.array(parked_car_lengths) # convert to a numpy array
         spots = np.hstack(
             [
-                x[0] - l[0] - min_clearance,
-                x[1:] - x[:-1] - l[1:] - l[:-1] - 2 * min_clearance,
-                L - x[-1] - l[-1] - min_clearance,
+                x[0] - l[0] - min_clearance, # the very first spot
+                x[1:] - x[:-1] - l[1:] - l[:-1] - 2 * min_clearance, # the spaces between all of the parked cars
+                L - x[-1] - l[-1] - min_clearance, # the empty space at the end
             ]
         )
-    # print(spots)
     return spots
 
 
 def get_spot_bounds(index, parked_car_locs, parked_car_lengths, min_clearance, new_car_length, L):
+    """
+    For a given spot at position `index`, and a set of cars located at `parked_car_locs` with lengths `parked_car_lengths`, and clearances between them `min_clearance`, for a block face of length L, return the extremeties at which a new car could park in this spot if it has a length `new_car_length`.
+    """
     if len(parked_car_locs) == 0:  # no cars yet
         min_loc = new_car_length + min_clearance
         max_loc = L - min_clearance - new_car_length
@@ -73,13 +90,13 @@ def get_spot_bounds(index, parked_car_locs, parked_car_lengths, min_clearance, n
                 parked_car_locs[0] + parked_car_lengths[0] + 2 * min_clearance + new_car_length
             )
             max_loc = L - min_clearance - new_car_length
-    else:
-        if index == 0:
+    else: # more than one car parked
+        if index == 0: # if this is the first spot
             min_loc = new_car_length + min_clearance
             max_loc = (
                 parked_car_locs[0] - parked_car_lengths[0] - 2 * min_clearance - new_car_length
             )
-        elif index == len(parked_car_locs):
+        elif index == len(parked_car_locs): # if this is the last spot
             min_loc = (
                 parked_car_locs[index - 1]
                 + parked_car_lengths[index - 1]
@@ -87,7 +104,7 @@ def get_spot_bounds(index, parked_car_locs, parked_car_lengths, min_clearance, n
                 + new_car_length
             )
             max_loc = L - min_clearance - new_car_length
-        else:
+        else: # if this is one of the interior spots
             min_loc = (
                 parked_car_locs[index - 1]
                 + parked_car_lengths[index - 1]
@@ -104,6 +121,9 @@ def get_spot_bounds(index, parked_car_locs, parked_car_lengths, min_clearance, n
 
 
 def is_empty(parked_car_locs, parked_car_lengths, new_car_length, test_loc):
+    """
+    This function is not used for anything.
+    """
     if len(parked_car_locs) == 0:  # no cars yet
         min_loc = new_car_length + min_clearance
         max_loc = L - min_clearance - new_car_length
