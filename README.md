@@ -14,3 +14,6 @@ To reproduce the figures in the paper, run the following command in the terminal
 ```
 sh figure_generator.sh
 ```
+
+## Documentation
+You can find documentation [here](https://benjym.github.io/parking/parking.html).
