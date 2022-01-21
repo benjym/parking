@@ -37,7 +37,7 @@ jobs:
           
       - name: Create docs
         run: |
-          pycco parking/*.py
+          pycco -i parking/*.py
 
       - name: GitHub Pages
         # You may pin to the exact commit or the version.
