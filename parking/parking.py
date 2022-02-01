@@ -292,7 +292,7 @@ def time_march(
     fig.savefig(f'{params["outfolder"]}/summary.png')
 
     if "spatiotemporal" in params:
-        spatiotemporal(nt, car_ids, L)
+        spatiotemporal(nt, car_ids, L, params)
         plt.savefig(f'{params["outfolder"]}/spatiotemporal.pdf', dpi=300)
         plt.savefig(f'{params["outfolder"]}/spatiotemporal.png', dpi=300)
 

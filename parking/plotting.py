@@ -66,7 +66,7 @@ def get_random_color(id):
     return hsv_to_rgb([h, s, v])
 
 
-def spatiotemporal(nt, car_ids, L):
+def spatiotemporal(nt, car_ids, L, params):
     patches = []
     for i in range(len(car_ids)):
         # [bottom left], width, height
@@ -114,3 +114,7 @@ def spatiotemporal(nt, car_ids, L):
     spt_ax.set_xlabel("Distance (m)")
     spt_ax.set_ylabel("Vehicles departed (veh)")
     plt.subplots_adjust(bottom=0.1, left=0.1, right=0.98, top=0.98)
+
+    with open(f"{params['outfolder']}/car_ids.pickle", "wb") as f:
+        import pickle
+        pickle.dump(car_ids, f)

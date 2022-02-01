@@ -1,9 +1,9 @@
 {
     "verbose": false,
     "spatiotemporal": true,
-    "strategy": ["one_side","middle","random"],
-    "L" : [1e2],
-    "departures_per_metre" : 10,
+    "strategy": ["one_side","half_half","middle","random"],
+    "L" : [5e1],
+    "departures_per_metre" : 5,
     "mean_car_length" : [2.5],
     "sigma_car_length" : [0.33333333333],
     "min_clearance" : 0.0
