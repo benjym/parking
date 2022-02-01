@@ -58,7 +58,7 @@ for i,N in enumerate([2,3]):
     ax[0].text(
         3e-1,
         0.01 + params['mean_car_length'][0]/(params['mean_car_length'][0] + N*params['sigma_car_length'][0]),
-        '$l=\mu+' + str(N) + r'\sigma$'
+        '$l_'+str(i+1)+'=\mu+' + str(N) + r'\sigma$'
     )
 
 

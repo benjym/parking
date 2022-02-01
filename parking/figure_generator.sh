@@ -21,4 +21,4 @@ python parking.py json/motorcycles.json
 python summarise_motorcycles.py
 
 # convert images to JPEG as per Findings requirements
-mogrify -density 400 -quality 90 -format jpg strategies.pdf blockface_lengths.pdf spatiotemporal_all.pdf
+# mogrify -density 400 -quality 90 -format jpg strategies.pdf blockface_lengths.pdf spatiotemporal_all.pdf
